@@ -1,1 +1,2 @@
-# django
+# django project 
+for myself
