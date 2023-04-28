@@ -50,3 +50,13 @@ def registration_page(request):
 def watch_menu(req):
     infos = Registration.objects.all()
     return render(req, "main/check_menu.html", context={"infos": infos})
+
+
+def delete_info(req, pk):
+    info = Registration.objects.filter(id=pk)
+    info.delete()
+    return redirect("index")
+
+
+def edit_info(req):
+    pass
