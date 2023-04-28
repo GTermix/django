@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpRequest
-from .forms import RegForm
+from .forms import RegForm, MainForm
+from .models import Registration
 
 
 def main_page(request: HttpRequest):
@@ -32,3 +33,20 @@ def registration(request):
         else:
             print(form.errors)
     return render(request, "main/reg.html", context={"form": form})
+
+
+def registration_page(request):
+    form = MainForm()
+    if request.method == "POST":
+        form = MainForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("index")
+        else:
+            print(form.errors)
+    return render(request, "main/sign.html", context={"form": form})
+
+
+def watch_menu(req):
+    infos = Registration.objects.all()
+    return render(req, "main/check_menu.html", context={"infos": infos})
