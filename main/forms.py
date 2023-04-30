@@ -1,5 +1,5 @@
 from django import forms
-from .models import Registration
+from .models import *
 
 
 class RegForm(forms.Form):
@@ -9,7 +9,7 @@ class RegForm(forms.Form):
     pass2 = forms.CharField(widget=forms.PasswordInput, label="Re-enter password")
 
 
-class MainForm(forms.ModelForm):
+class OrderForm(forms.ModelForm):
     class Meta:
-        model = Registration
+        model = Order
         fields = "__all__"
