@@ -1,10 +1,20 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import *
 from .models import *
 
 
 def index(request):
     return render(request, "main/index.html")
+
+
+def products(req):
+    pr = Product.objects.all()
+    return render(req, "main/products.html", context={"products": pr})
+
+
+def product_details(req, pk):
+    product = get_object_or_404(Product, id=pk)
+    return render(req, "main/product_info.html", {"product": product})
 
 
 def add_order(req):
@@ -20,7 +30,7 @@ def add_order(req):
 def product_add(req):
     form = ProductForm()
     if req.method == "POST":
-        form = ProductForm(req.POST)
+        form = ProductForm(req.POST,req.FILES)
         if form.is_valid():
             form.save()
             return redirect("index")
