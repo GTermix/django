@@ -7,9 +7,14 @@ def index(request):
     return render(request, "main/index.html")
 
 
-def products(req):
-    pr = Product.objects.all()
-    return render(req, "main/products.html", context={"products": pr})
+def products(req, cat_slug=None):
+    cats = Category.objects.all()
+    if cat_slug:
+        cat = get_object_or_404(Category, slug=cat_slug)
+        pr = Product.objects.filter(category=cat)
+    else:
+        pr = Product.objects.all()
+    return render(req, "main/products.html", context={"products": pr, "kats": cats})
 
 
 def product_details(req, pk):
@@ -30,7 +35,7 @@ def add_order(req):
 def product_add(req):
     form = ProductForm()
     if req.method == "POST":
-        form = ProductForm(req.POST,req.FILES)
+        form = ProductForm(req.POST, req.FILES)
         if form.is_valid():
             form.save()
             return redirect("index")

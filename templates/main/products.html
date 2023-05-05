@@ -10,20 +10,34 @@
 <body>
 <div class="container">
     <div class="row">
-    <h1 class="text text-primary text-center">Add Products</h1>
-    {% for pro in products %}
-    <div class="col-md-4">
-        <div class="card" style="width: 18rem;">
-            {% if pro.image %}
-            <img src="{{pro.image.url}}" class="card-img-top" alt="...">
-            {% endif %}
-            <div class="card-body">
-                <h5 class="card-title">{{pro.title}}</h5>
-                <a href="{% url 'prdct' pro.pk %}" class="btn btn-primary">Batafsil ...</a>
+        <h1 class="text text-primary text-center">Products</h1>
+        <div class="container-fluid my-3">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    Kategoriyalar
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    {% for i in kats %}
+                    <li><a class="dropdown-item" href="{% url 'cat_detail' i.slug %}">{{i.title}}</a></li>
+                    {%endfor%}
+                </ul>
             </div>
         </div>
-    </div>
-    {% endfor %}
+        {% for pro in products %}
+        <div class="col-md-4">
+            <div class="card" style="width: 18rem;">
+                {% if pro.image %}
+                <img src="{{pro.image.url}}" class="card-img-top" alt="...">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title text-center">{{pro.title}}</h5>
+                    <p class="card-text text-center">{{ pro.price }} so'm</p>
+                    <a href="{% url 'prdct' pro.pk %}" class="btn btn-primary w-100">Batafsil</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </div>
 

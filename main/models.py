@@ -11,9 +11,18 @@ class Customer(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
+class Category(models.Model):
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=200)
+
+    def __str__(self):
+        return f"{self.title}"
+
+
 class Product(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     image = models.ImageField(upload_to="product/", null=True)
     in_stock = models.BooleanField(default=True)
