@@ -1,12 +1,22 @@
 from django import forms
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 from .models import *
 
 
-class RegForm(forms.Form):
-    name = forms.CharField(max_length=30, label="Name")
-    email = forms.EmailField(label="Email")
-    pass1 = forms.CharField(widget=forms.PasswordInput, label="Enter password")
-    pass2 = forms.CharField(widget=forms.PasswordInput, label="Re-enter password")
+class NewCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')
+
+    def save(self, commit=True):
+        user = super(NewCreationForm, self).save(commit=False)
+        user.email = self.cleaned_data['email']
+        if commit:
+            user.save()
+        return user
 
 
 class OrderForm(forms.ModelForm):
