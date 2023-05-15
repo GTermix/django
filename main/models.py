@@ -29,6 +29,9 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.price}"
+    
+    class Meta:
+        ordering = ['-id']
 
 
 class Order(models.Model):

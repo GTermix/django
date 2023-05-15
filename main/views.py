@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
@@ -95,6 +96,7 @@ def index(request):
 
 class Products(ListView):
     paginate_by = 3
+    ordering = '-id'
 
     def get(self, req, cat_slug=None):
         cats = Category.objects.all()
@@ -103,6 +105,10 @@ class Products(ListView):
             pr = Product.objects.filter(category=cat)
         else:
             pr = Product.objects.all()
+
+        paginator = Paginator(pr, 3)
+        page_number = req.GET.get("page")
+        pr = paginator.get_page(page_number)
         return render(req, "main/products.html", context={"products": pr, "kats": cats})
 
 
