@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404, HttpResponse
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib import messages
+from django.urls import reverse_lazy
 from .forms import *
 from .models import *
 
@@ -17,7 +18,7 @@ from django.utils.encoding import force_bytes
 
 from django.views import View
 from django.views.generic import ListView
-
+from django.views.generic.edit import CreateView
 
 class password_reset_request(View):
     def post(self, request):
@@ -91,7 +92,7 @@ def logout_(req):
 
 
 def index(request):
-    return render(request, "main/index1.html")
+    return render(request, "main/index.html")
 
 
 class Products(ListView):
@@ -117,51 +118,40 @@ def product_details(req, pk):
     return render(req, "main/product_info.html", {"product": product})
 
 
-def add_order(req):
-    form = OrderForm()
-    if req.method == "POST":
-        form = OrderForm(req.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("index")
-    return render(req, "main/order.html", context={'form': form})
+class AddOrderView(CreateView):
+    model = Order
+    form_class = OrderForm
+    template_name = 'main/order.html'
+    success_url = reverse_lazy('index')
 
 
-def product_add(req):
-    form = ProductForm()
-    if req.method == "POST":
+class AddProduct(View):
+    def get(self, req):
+        form = ProductForm()
+        return render(req, "main/product.html", context={"form": form})
+
+    def post(self, req):
         form = ProductForm(req.POST, req.FILES)
         if form.is_valid():
             form.save()
             return redirect("index")
-    return render(req, "main/product.html", context={"form": form})
+        return render(req, "main/product.html", context={"form": form})
 
 
-def contact_add(req):
-    form = ContactForm()
-    if req.method == "POST":
-        form = ContactForm(req.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("index")
-    return render(req, "main/contact.html", context={"form": form})
+class ContactAddView(CreateView):
+    model = Contact
+    form_class = ContactForm
+    template_name = 'main/contact.html'
+    success_url = reverse_lazy('index')
 
+class CustomerAddView(CreateView):
+    model = Customer
+    form_class = CustomerForm
+    template_name = 'main/customer.html'
+    success_url = reverse_lazy('index')
 
-def customer_page(req):
-    form = CustomerForm()
-    if req.method == "POST":
-        form = CustomerForm(req.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("index")
-    return render(req, "main/customer.html", context={"form": form})
-
-
-def address_page(req):
-    form = AddressForm()
-    if req.method == "POST":
-        form = AddressForm(req.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("index")
-    return render(req, "main/contact.html", context={"form": form})
+class AddressAddView(CreateView):
+    model = Address
+    form_class = AddressForm
+    template_name = 'main/contact.html'
+    success_url = reverse_lazy('index')
